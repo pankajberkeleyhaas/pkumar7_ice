@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Data Results (Exclude large result files)
+sentiment_results.csv
+nlp_analysis_results.csv
+nlp_analysis_results_v2.csv
+nlp_analysis_results_v3.csv
+nlp_analysis_results_v4.csv
+edge_case_results.csv
+
+# Keep input files for testing
+!nlp_test_input.csv
+!edge_case_test.csv
+!AICOE_api_endpoint.csv

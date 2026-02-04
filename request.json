@@ -1,0 +1,15 @@
+{
+    "model": "llama3",
+    "messages": [
+        {
+            "role": "system",
+            "content": "You are a sentiment analysis expert. Analyze the sentiment and return ONLY a JSON object with format: {\"sentiment\": \"positive/negative/neutral\", \"score\": 0.0-1.0, \"reason\": \"brief explanation\"}"
+        },
+        {
+            "role": "user",
+            "content": "Analyze: \"This product is absolutely amazing! I love how easy it is to use.\""
+        }
+    ],
+    "temperature": 0.1,
+    "max_tokens": 150
+}
