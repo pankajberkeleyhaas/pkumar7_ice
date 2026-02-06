@@ -24,6 +24,7 @@ SYSTEM_PROMPT = """You are a multilingual NLP expert. Analyze the provided text 
     {
       "text": "string",
       "label": "string",
+      "canonical_name": "string",
       "confidence": 0.000-1.000,
       "sentiment": "positive/negative/neutral",
       "probabilities": {
@@ -42,7 +43,12 @@ Instructions:
 1. Sentiment: Determine the primary tone of the overall text.
 2. Probabilities: Provide a nuanced numerical distribution (summing to 1.000) for the overall text.
 3. Summary: Provide a comprehensive 2-3 sentence summary.
-4. Entities: Extract named entities with their labels, a numerical confidence score (0.000-1.000), and both a label sentiment AND a detailed numerical sentiment probability distribution (positive, negative, neutral) indicating how the entity is portrayed within the context of the text.
+4. Entities: Extract named entities. For each entity, provide:
+   - text: The original text from the input.
+   - label: The entity type (e.g., Person, Organization, Location).
+   - canonical_name: The formal, full real-world name of the entity (e.g., if text is 'musk' and label is 'Person', canonical_name is 'Elon Musk'; if 'google', canonical_name is 'Google Inc.'). Use the context to resolve abbreviations or shortened names.
+   - confidence: A numerical confidence score (0.000-1.000).
+   - sentiment & probabilities: The sentiment distribution for the entity within the context.
 5. Rewording: Provide a concise, clear rephrasing.
 6. URLs: Extract all raw URLs.
 7. Topics: Identify main themes.
@@ -109,6 +115,7 @@ def analyze_content(session, text):
             for e in result.get("entities", []):
                 text_val = e.get('text', 'N/A')
                 label = e.get('label', 'N/A')
+                canon = e.get('canonical_name', text_val)
                 conf = e.get('confidence', 'N/A')
                 sent = e.get('sentiment', 'N/A')
                 probs = e.get('probabilities', {})
@@ -116,7 +123,7 @@ def analyze_content(session, text):
                 p_neg = probs.get('negative', 0.0)
                 p_neu = probs.get('neutral', 0.0)
                 
-                entities_list.append(f"{text_val} ({label}, Overall: {sent}, [Pos: {p_pos}, Neg: {p_neg}, Neu: {p_neu}], Conf: {conf})")
+                entities_list.append(f"{text_val} [{canon}] ({label}, Overall: {sent}, [Pos: {p_pos}, Neg: {p_neg}, Neu: {p_neu}], Conf: {conf})")
             
             result["entities_flat"] = "; ".join(entities_list)
             result["topics_flat"] = "; ".join(result.get("topics", []))
