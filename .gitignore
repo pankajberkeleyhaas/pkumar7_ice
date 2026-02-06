@@ -5,15 +5,16 @@ __pycache__/
 venv/
 .env
 
-# Data Results (Exclude large result files)
-sentiment_results.csv
-nlp_analysis_results.csv
-nlp_analysis_results_v2.csv
-nlp_analysis_results_v3.csv
-nlp_analysis_results_v4.csv
-edge_case_results.csv
+# Data Results (Exclude result files)
+*_results.csv
+nlp_fixed_results.csv
+nlp_final_20_results.csv
+nlp_precision_test.csv
+nlp_distribution_test.csv
+nlp_entity_*_test.csv
 
-# Keep input files for testing
+# Keep main input files
+!AICOE_api_endpoint.csv
+!financial_instrument_comments.csv
 !nlp_test_input.csv
 !edge_case_test.csv
-!AICOE_api_endpoint.csv

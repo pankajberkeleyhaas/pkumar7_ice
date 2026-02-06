@@ -15,25 +15,39 @@ SYSTEM_PROMPT = """You are a multilingual NLP expert. Analyze the provided text 
 {
   "sentiment": "positive/negative/neutral",
   "probabilities": {
-    "positive": 0.0-1.0,
-    "negative": 0.0-1.0,
-    "neutral": 0.0-1.0
+    "positive": 0.000-1.000,
+    "negative": 0.000-1.000,
+    "neutral": 0.000-1.000
   },
   "summary": "string",
-  "entities": [{"text": "string", "label": "string"}],
+  "entities": [
+    {
+      "text": "string",
+      "label": "string",
+      "confidence": 0.000-1.000,
+      "sentiment": "positive/negative/neutral",
+      "probabilities": {
+        "positive": 0.000-1.000,
+        "negative": 0.000-1.000,
+        "neutral": 0.000-1.000
+      }
+    }
+  ],
   "rewording": "string",
   "urls": ["string"],
   "topics": ["string"]
 }
 
 Instructions:
-1. Sentiment: Determine the overall tone.
-2. Probabilities: Provide numerical confidence scores for positive, negative, and neutral sentiments. These should ideally sum to 1.0.
-3. Summary: Provide a comprehensive 2-3 sentence summary of the text.
-4. Entities: Extract named entities (People, Organizations, Locations, Products, Dates). Provide both the text and its label.
-5. Rewording: Provide a concise, clear rephrasing of the main point.
-6. URLs: Extract all raw URLs found in the text.
-7. Topics: Identify the main themes or categories being discussed."""
+1. Sentiment: Determine the primary tone of the overall text.
+2. Probabilities: Provide a nuanced numerical distribution (summing to 1.000) for the overall text.
+3. Summary: Provide a comprehensive 2-3 sentence summary.
+4. Entities: Extract named entities with their labels, a numerical confidence score (0.000-1.000), and both a label sentiment AND a detailed numerical sentiment probability distribution (positive, negative, neutral) indicating how the entity is portrayed within the context of the text.
+5. Rewording: Provide a concise, clear rephrasing.
+6. URLs: Extract all raw URLs.
+7. Topics: Identify main themes.
+
+Note: All numerical distributions must sum exactly to 1.000 and use three decimal places."""
 
 # Disable insecure request warnings
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -71,8 +85,8 @@ def analyze_content(session, text):
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": f"Analyze this text: \"{text}\""}
         ],
-        "temperature": 0.1,
-        "max_tokens": 500
+        "temperature": 0.7,
+        "max_tokens": 1000
     }
     
     try:
@@ -82,15 +96,34 @@ def analyze_content(session, text):
         data = response.json()
         content = data['choices'][0]['message']['content']
         
+        # Robust JSON cleaning
         result = extract_json(content)
+        if not result:
+            # Try once more with aggressive cleaning of non-printable characters
+            clean_content = "".join(char for char in content if char.isprintable() or char in ['\n', '\r', '\t'])
+            result = extract_json(clean_content)
+
         if result:
             # Flatten entities for easier CSV output if needed
-            entities_str = "; ".join([f"{e['text']} ({e.get('label', 'N/A')})" for e in result.get("entities", [])])
-            result["entities_flat"] = entities_str
+            entities_list = []
+            for e in result.get("entities", []):
+                text_val = e.get('text', 'N/A')
+                label = e.get('label', 'N/A')
+                conf = e.get('confidence', 'N/A')
+                sent = e.get('sentiment', 'N/A')
+                probs = e.get('probabilities', {})
+                p_pos = probs.get('positive', 0.0)
+                p_neg = probs.get('negative', 0.0)
+                p_neu = probs.get('neutral', 0.0)
+                
+                entities_list.append(f"{text_val} ({label}, Overall: {sent}, [Pos: {p_pos}, Neg: {p_neg}, Neu: {p_neu}], Conf: {conf})")
+            
+            result["entities_flat"] = "; ".join(entities_list)
             result["topics_flat"] = "; ".join(result.get("topics", []))
             result["urls_flat"] = "; ".join(result.get("urls", []))
             return result
         else:
+            print(f"DEBUG: Parsing failed for response: {content[:200]}...")
             return {"sentiment": "error", "probabilities": {"positive": 0.0, "negative": 0.0, "neutral": 0.0}, "summary": "Error", "entities_flat": "Error", "rewording": "Parsing Error", "urls_flat": "", "topics_flat": ""}
             
     except Exception as e:
@@ -106,9 +139,24 @@ def process_analysis(input_file, output_file, limit=None):
     data_to_process = []
     with open(input_file, 'r', encoding='utf-8', errors='replace') as f:
         reader = csv.DictReader(f)
-        col_name = next((c for c in reader.fieldnames if c.lower() == 'comments'), reader.fieldnames[0])
+        # Dynamic column detection
+        target_cols = ['body', 'comment', 'comments', 'text', 'content']
+        col_name = None
+        
+        # Check fieldnames case-insensitively
+        for target in target_cols:
+            found = next((c for c in reader.fieldnames if c.lower() == target), None)
+            if found:
+                col_name = found
+                break
+        
+        if not col_name:
+            col_name = reader.fieldnames[0]
+            
+        print(f"Using column: '{col_name}'")
         for row in reader:
-            data_to_process.append(row[col_name])
+            if row.get(col_name):
+                data_to_process.append(row[col_name])
 
     if limit:
         data_to_process = data_to_process[:limit]
