@@ -175,23 +175,57 @@ def process_analysis(input_file, output_file, limit=None):
         print(f"[{i+1}/{len(data_to_process)}] Analyzing...")
         analysis = analyze_content(session, content)
         
-        probs = analysis.get("probabilities", {})
-        results.append({
+        overall_probs = analysis.get("probabilities", {})
+        entities = analysis.get("entities", [])
+        
+        # Base data for this text
+        base_row = {
             "Original_Text": content,
-            "Sentiment": analysis.get("sentiment"),
-            "Prob_Positive": probs.get("positive"),
-            "Prob_Negative": probs.get("negative"),
-            "Prob_Neutral": probs.get("neutral"),
+            "Overall_Sentiment": analysis.get("sentiment"),
+            "Overall_Prob_Pos": overall_probs.get("positive"),
+            "Overall_Prob_Neg": overall_probs.get("negative"),
+            "Overall_Prob_Neu": overall_probs.get("neutral"),
             "Summary": analysis.get("summary"),
             "Rewording": analysis.get("rewording"),
-            "Entities": analysis.get("entities_flat"),
             "Topics": analysis.get("topics_flat"),
             "URLs": analysis.get("urls_flat")
-        })
+        }
+
+        if entities:
+            # Create a row for each entity
+            for e in entities:
+                row = base_row.copy()
+                e_probs = e.get("probabilities", {})
+                row.update({
+                    "Entity_Text": e.get("text"),
+                    "Entity_Canonical_Name": e.get("canonical_name"),
+                    "Entity_Label": e.get("label"),
+                    "Entity_Sentiment": e.get("sentiment"),
+                    "Entity_Prob_Pos": e_probs.get("positive"),
+                    "Entity_Prob_Neg": e_probs.get("negative"),
+                    "Entity_Prob_Neu": e_probs.get("neutral"),
+                    "Entity_Confidence": e.get("confidence")
+                })
+                results.append(row)
+        else:
+            # Still add a row if no entities found, but with empty entity fields
+            row = base_row.copy()
+            row.update({
+                "Entity_Text": "N/A", "Entity_Canonical_Name": "N/A", "Entity_Label": "N/A",
+                "Entity_Sentiment": "N/A", "Entity_Prob_Pos": 0.0, "Entity_Prob_Neg": 0.0,
+                "Entity_Prob_Neu": 0.0, "Entity_Confidence": 0.0
+            })
+            results.append(row)
+            
         time.sleep(0.1)
 
     with open(output_file, 'w', newline='', encoding='utf-8') as f:
-        fieldnames = ["Original_Text", "Sentiment", "Prob_Positive", "Prob_Negative", "Prob_Neutral", "Summary", "Rewording", "Entities", "Topics", "URLs"]
+        fieldnames = [
+            "Original_Text", "Overall_Sentiment", "Overall_Prob_Pos", "Overall_Prob_Neg", "Overall_Prob_Neu", 
+            "Summary", "Rewording", "Topics", "URLs",
+            "Entity_Text", "Entity_Canonical_Name", "Entity_Label", "Entity_Sentiment", 
+            "Entity_Prob_Pos", "Entity_Prob_Neg", "Entity_Prob_Neu", "Entity_Confidence"
+        ]
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(results)
