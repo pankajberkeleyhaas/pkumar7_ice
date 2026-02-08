@@ -1,0 +1,156 @@
+{
+  "entities": [
+    {
+      "id": "People's Republic of China",
+      "label": "People's Republic of China",
+      "type": "Organization",
+      "mentions": 2
+    },
+    {
+      "id": "United States of America",
+      "label": "United States of America",
+      "type": "Organization",
+      "mentions": 2
+    },
+    {
+      "id": "Joe Biden",
+      "label": "Joe Biden",
+      "type": "Person",
+      "mentions": 1
+    },
+    {
+      "id": "France",
+      "label": "France",
+      "type": "Country",
+      "mentions": 1
+    },
+    {
+      "id": "United States",
+      "label": "United States",
+      "type": "Country",
+      "mentions": 1
+    },
+    {
+      "id": "Citizens' Climate Lobby",
+      "label": "Citizens' Climate Lobby",
+      "type": "Organization",
+      "mentions": 1
+    },
+    {
+      "id": "Greta Thunberg",
+      "label": "Greta Thunberg",
+      "type": "Person",
+      "mentions": 1
+    },
+    {
+      "id": "United Kingdom",
+      "label": "United Kingdom",
+      "type": "Country",
+      "mentions": 1
+    }
+  ],
+  "relationships": [
+    {
+      "source": "People's Republic of China",
+      "target": "United States of America",
+      "relationship": "co-occurs_with",
+      "context": "Alright knucklehead, China built more solar in just the last year than the **entire US installed sol...",
+      "sentiment": "negative",
+      "confidence": 1.0
+    },
+    {
+      "source": "People's Republic of China",
+      "target": "Joe Biden",
+      "relationship": "co-occurs_with",
+      "context": "Alright knucklehead, China built more solar in just the last year than the **entire US installed sol...",
+      "sentiment": "negative",
+      "confidence": 1.0
+    },
+    {
+      "source": "United States of America",
+      "target": "Joe Biden",
+      "relationship": "co-occurs_with",
+      "context": "Alright knucklehead, China built more solar in just the last year than the **entire US installed sol...",
+      "sentiment": "negative",
+      "confidence": 1.0
+    },
+    {
+      "source": "France",
+      "target": "United States",
+      "relationship": "co-occurs_with",
+      "context": "I was referring to this where France opposed any increase in fuel taxes: https://en.m.wikipedia.org/...",
+      "sentiment": "neutral",
+      "confidence": 1.0
+    },
+    {
+      "source": "France",
+      "target": "Citizens' Climate Lobby",
+      "relationship": "co-occurs_with",
+      "context": "I was referring to this where France opposed any increase in fuel taxes: https://en.m.wikipedia.org/...",
+      "sentiment": "neutral",
+      "confidence": 1.0
+    },
+    {
+      "source": "United States",
+      "target": "Citizens' Climate Lobby",
+      "relationship": "co-occurs_with",
+      "context": "I was referring to this where France opposed any increase in fuel taxes: https://en.m.wikipedia.org/...",
+      "sentiment": "neutral",
+      "confidence": 1.0
+    },
+    {
+      "source": "Greta Thunberg",
+      "target": "United States of America",
+      "relationship": "co-occurs_with",
+      "context": "Alright Greta, US 3,809,525 sq mi,  UK  94,354 sq mi. Size matters, we have climates from perma-fros...",
+      "sentiment": "negative",
+      "confidence": 1.0
+    },
+    {
+      "source": "Greta Thunberg",
+      "target": "United Kingdom",
+      "relationship": "co-occurs_with",
+      "context": "Alright Greta, US 3,809,525 sq mi,  UK  94,354 sq mi. Size matters, we have climates from perma-fros...",
+      "sentiment": "negative",
+      "confidence": 1.0
+    },
+    {
+      "source": "Greta Thunberg",
+      "target": "People's Republic of China",
+      "relationship": "co-occurs_with",
+      "context": "Alright Greta, US 3,809,525 sq mi,  UK  94,354 sq mi. Size matters, we have climates from perma-fros...",
+      "sentiment": "negative",
+      "confidence": 1.0
+    },
+    {
+      "source": "United States of America",
+      "target": "United Kingdom",
+      "relationship": "co-occurs_with",
+      "context": "Alright Greta, US 3,809,525 sq mi,  UK  94,354 sq mi. Size matters, we have climates from perma-fros...",
+      "sentiment": "negative",
+      "confidence": 1.0
+    },
+    {
+      "source": "United States of America",
+      "target": "People's Republic of China",
+      "relationship": "co-occurs_with",
+      "context": "Alright Greta, US 3,809,525 sq mi,  UK  94,354 sq mi. Size matters, we have climates from perma-fros...",
+      "sentiment": "negative",
+      "confidence": 1.0
+    },
+    {
+      "source": "United Kingdom",
+      "target": "People's Republic of China",
+      "relationship": "co-occurs_with",
+      "context": "Alright Greta, US 3,809,525 sq mi,  UK  94,354 sq mi. Size matters, we have climates from perma-fros...",
+      "sentiment": "negative",
+      "confidence": 1.0
+    }
+  ],
+  "metadata": {
+    "source_file": "nlp_final_1000_exploded.csv",
+    "generated_at": "2026-02-07 19:48:51",
+    "node_count": 8,
+    "edge_count": 12
+  }
+}

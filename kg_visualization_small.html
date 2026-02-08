@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Graph Visualization</title>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 0; background: #f0f2f5; }
+        #network { width: 100vw; height: 100vh; background: #ffffff; }
+        .controls { position: absolute; top: 10px; left: 10px; z-index: 100; background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { margin-top: 0; font-size: 1.2rem; }
+        .stats { margin-top: 10px; font-size: 0.9rem; color: #555; }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <h2>Knowledge Graph</h2>
+        <div class="stats">
+            Nodes: 8<br>
+            Edges: 12<br>
+            Source: nlp_final_1000_exploded.csv
+        </div>
+        <div style="margin-top:10px; font-size:0.8rem;">
+            <span style="color:#FF6B6B">● Person</span> 
+            <span style="color:#4ECDC4">● Org</span> 
+            <span style="color:#45B7D1">● Loc</span>
+        </div>
+    </div>
+    <div id="network"></div>
+    <script>
+        const nodes = new vis.DataSet([{"id": "People's Republic of China", "label": "People's Republic of China", "title": "<b>People's Republic of China</b><br>Type: Organization<br>Mentions: 2", "value": 2, "color": "#4ECDC4", "group": "Organization"}, {"id": "United States of America", "label": "United States of America", "title": "<b>United States of America</b><br>Type: Organization<br>Mentions: 2", "value": 2, "color": "#4ECDC4", "group": "Organization"}, {"id": "Joe Biden", "label": "Joe Biden", "title": "<b>Joe Biden</b><br>Type: Person<br>Mentions: 1", "value": 1, "color": "#FF6B6B", "group": "Person"}, {"id": "France", "label": "France", "title": "<b>France</b><br>Type: Country<br>Mentions: 1", "value": 1, "color": "#95A5A6", "group": "Country"}, {"id": "United States", "label": "United States", "title": "<b>United States</b><br>Type: Country<br>Mentions: 1", "value": 1, "color": "#95A5A6", "group": "Country"}, {"id": "Citizens' Climate Lobby", "label": "Citizens' Climate Lobby", "title": "<b>Citizens' Climate Lobby</b><br>Type: Organization<br>Mentions: 1", "value": 1, "color": "#4ECDC4", "group": "Organization"}, {"id": "Greta Thunberg", "label": "Greta Thunberg", "title": "<b>Greta Thunberg</b><br>Type: Person<br>Mentions: 1", "value": 1, "color": "#FF6B6B", "group": "Person"}, {"id": "United Kingdom", "label": "United Kingdom", "title": "<b>United Kingdom</b><br>Type: Country<br>Mentions: 1", "value": 1, "color": "#95A5A6", "group": "Country"}]);
+        const edges = new vis.DataSet([{"from": "People's Republic of China", "to": "United States of America", "title": "Relation: co-occurs_with<br>Context: Alright knucklehead, China built more solar in just the last year than the **entire US installed sol...<br>Sentiment: negative", "color": {"color": "#E74C3C", "highlight": "#E74C3C"}, "arrows": "to"}, {"from": "People's Republic of China", "to": "Joe Biden", "title": "Relation: co-occurs_with<br>Context: Alright knucklehead, China built more solar in just the last year than the **entire US installed sol...<br>Sentiment: negative", "color": {"color": "#E74C3C", "highlight": "#E74C3C"}, "arrows": "to"}, {"from": "United States of America", "to": "Joe Biden", "title": "Relation: co-occurs_with<br>Context: Alright knucklehead, China built more solar in just the last year than the **entire US installed sol...<br>Sentiment: negative", "color": {"color": "#E74C3C", "highlight": "#E74C3C"}, "arrows": "to"}, {"from": "France", "to": "United States", "title": "Relation: co-occurs_with<br>Context: I was referring to this where France opposed any increase in fuel taxes: https://en.m.wikipedia.org/...<br>Sentiment: neutral", "color": {"color": "#95A5A6", "highlight": "#95A5A6"}, "arrows": "to"}, {"from": "France", "to": "Citizens' Climate Lobby", "title": "Relation: co-occurs_with<br>Context: I was referring to this where France opposed any increase in fuel taxes: https://en.m.wikipedia.org/...<br>Sentiment: neutral", "color": {"color": "#95A5A6", "highlight": "#95A5A6"}, "arrows": "to"}, {"from": "United States", "to": "Citizens' Climate Lobby", "title": "Relation: co-occurs_with<br>Context: I was referring to this where France opposed any increase in fuel taxes: https://en.m.wikipedia.org/...<br>Sentiment: neutral", "color": {"color": "#95A5A6", "highlight": "#95A5A6"}, "arrows": "to"}, {"from": "Greta Thunberg", "to": "United States of America", "title": "Relation: co-occurs_with<br>Context: Alright Greta, US 3,809,525 sq mi,  UK  94,354 sq mi. Size matters, we have climates from perma-fros...<br>Sentiment: negative", "color": {"color": "#E74C3C", "highlight": "#E74C3C"}, "arrows": "to"}, {"from": "Greta Thunberg", "to": "United Kingdom", "title": "Relation: co-occurs_with<br>Context: Alright Greta, US 3,809,525 sq mi,  UK  94,354 sq mi. Size matters, we have climates from perma-fros...<br>Sentiment: negative", "color": {"color": "#E74C3C", "highlight": "#E74C3C"}, "arrows": "to"}, {"from": "Greta Thunberg", "to": "People's Republic of China", "title": "Relation: co-occurs_with<br>Context: Alright Greta, US 3,809,525 sq mi,  UK  94,354 sq mi. Size matters, we have climates from perma-fros...<br>Sentiment: negative", "color": {"color": "#E74C3C", "highlight": "#E74C3C"}, "arrows": "to"}, {"from": "United States of America", "to": "United Kingdom", "title": "Relation: co-occurs_with<br>Context: Alright Greta, US 3,809,525 sq mi,  UK  94,354 sq mi. Size matters, we have climates from perma-fros...<br>Sentiment: negative", "color": {"color": "#E74C3C", "highlight": "#E74C3C"}, "arrows": "to"}, {"from": "United States of America", "to": "People's Republic of China", "title": "Relation: co-occurs_with<br>Context: Alright Greta, US 3,809,525 sq mi,  UK  94,354 sq mi. Size matters, we have climates from perma-fros...<br>Sentiment: negative", "color": {"color": "#E74C3C", "highlight": "#E74C3C"}, "arrows": "to"}, {"from": "United Kingdom", "to": "People's Republic of China", "title": "Relation: co-occurs_with<br>Context: Alright Greta, US 3,809,525 sq mi,  UK  94,354 sq mi. Size matters, we have climates from perma-fros...<br>Sentiment: negative", "color": {"color": "#E74C3C", "highlight": "#E74C3C"}, "arrows": "to"}]);
+        
+        const container = document.getElementById('network');
+        const data = { nodes: nodes, edges: edges };
+        const options = {
+            nodes: {
+                shape: 'dot',
+                scaling: {
+                    min: 10,
+                    max: 30,
+                    label: { enabled: true }
+                },
+                font: { size: 14, face: 'Tahoma' }
+            },
+            edges: {
+                width: 1.5,
+                smooth: { type: 'continuous' }
+            },
+            physics: {
+                stabilization: false,
+                barnesHut: {
+                    gravitationalConstant: -2000,
+                    springConstant: 0.04,
+                    springLength: 150
+                }
+            },
+            interaction: { hover: true, tooltipDelay: 200 }
+        };
+        
+        const network = new vis.Network(container, data, options);
+    </script>
+</body>
+</html>
